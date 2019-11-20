@@ -110,4 +110,39 @@ public class GatosService {
         }
   
     }
+
+    public static void verFavorito(String apikey) throws IOException{
+    
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+          .url("https://api.thecatapi.com/v1/favourites")
+          .get()
+          .addHeader("Content-Type", "application/json")
+          .addHeader("x-api-key", apikey)
+          .build();
+
+        Response response = client.newCall(request).execute();
+        
+        // guardamos el string con la respuesta
+        String elJson = response.body().string();
+        
+        //creamos el objeto gson
+        Gson gson = new Gson();
+        
+        GatosFav[] gatosArray = gson.fromJson(elJson,GatosFav[].class);
+        
+        if(gatosArray.length > 0){
+            int min = 1;
+            int max  = gatosArray.length;
+            int aleatorio = (int) (Math.random() * ((max-min)-1)) + min;
+            int indice = aleatorio-1;
+            
+            GatosFav gatofav = gatosArray[indice];
+            
+            
+        }
+        
+    }
+
 }
