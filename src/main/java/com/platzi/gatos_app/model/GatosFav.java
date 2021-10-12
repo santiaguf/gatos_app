@@ -3,17 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.platzi.gatos_app;
+package com.platzi.gatos_app.model;
+
+import io.github.cdimascio.dotenv.Dotenv;
 
 /**
  *
  * @author ohmyfi
  */
 public class GatosFav {
+	
+	Dotenv dotenv = Dotenv.load();
+	
     String id;
     String image_id;
-    String apikey= "74668d02-a299-40ae-bb05-130d2e65c227"; 
-    Imagex image;        
+    String apikey= dotenv.get("API_KEY");
+    public Imagex image;        
 
     public String getId() {
         return id;

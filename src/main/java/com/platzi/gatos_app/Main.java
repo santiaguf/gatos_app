@@ -8,11 +8,14 @@ package com.platzi.gatos_app;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 
+import com.platzi.gatos_app.model.Gatos;
+import com.platzi.gatos_app.service.GatosService;
+
 /**
  *
  * @author ohmyfi
  */
-public class Inicio {
+public class Main {
     
     public static void main(String[] args) throws IOException{
         int opcion_menu = -1;

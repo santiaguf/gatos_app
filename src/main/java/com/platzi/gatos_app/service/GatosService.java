@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.platzi.gatos_app;
+package com.platzi.gatos_app.service;
 
 import com.google.gson.Gson;
+import com.platzi.gatos_app.model.Gatos;
+import com.platzi.gatos_app.model.GatosFav;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -103,8 +105,11 @@ public class GatosService {
               .addHeader("Content-Type", "application/json")
               .addHeader("x-api-key", gato.getApikey())
               .build();
-            Response response = client.newCall(request).execute();            
-                  
+            Response response = client.newCall(request).execute();
+            
+            if(!response.isSuccessful()) {
+            	response.body().close();
+            }            
         }catch(IOException e){
             System.out.println(e);
         }
@@ -126,6 +131,10 @@ public class GatosService {
         
         // guardamos el string con la respuesta
         String elJson = response.body().string();
+        
+        if(!response.isSuccessful()) {
+        	response.body().close();
+        }
         
         //creamos el objeto gson
         Gson gson = new Gson();
@@ -203,6 +212,10 @@ public class GatosService {
               .build();
 
             Response response = client.newCall(request).execute();
+            
+            if(!response.isSuccessful()) {
+            	response.body().close();
+            }
         }catch(IOException e){
             System.out.println(e);
         }
