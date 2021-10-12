@@ -44,7 +44,7 @@ public class Main {
                 default:
                     break;
             }     
-        }while(opcion_menu != 1);
+        }while(opcion_menu != 2);
         
     }
     
