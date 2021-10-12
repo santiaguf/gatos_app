@@ -9,16 +9,15 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 /**
  *
- * @author ohmyfi
+ * @author santiaguf
  */
 public class GatosFav {
-	
 	Dotenv dotenv = Dotenv.load();
-	
+
     String id;
     String image_id;
     String apikey= dotenv.get("API_KEY");
-    public Imagex image;        
+    public Imagex image;
 
     public String getId() {
         return id;
@@ -51,7 +50,4 @@ public class GatosFav {
     public void setImage(Imagex image) {
         this.image = image;
     }
-    
-    
-    
 }

@@ -7,7 +7,7 @@ package com.platzi.gatos_app.model;
 
 /**
  *
- * @author ohmyfi
+ * @author santiaguf
  */
 public class Imagex {
     String id;
@@ -28,6 +28,4 @@ public class Imagex {
     public void setUrl(String url) {
         this.url = url;
     }
-    
-      
 }

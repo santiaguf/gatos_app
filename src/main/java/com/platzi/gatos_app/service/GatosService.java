@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author ohmyfi
+ * @author santiaguf
  */
 public class GatosService {
     

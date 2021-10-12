@@ -12,9 +12,8 @@ import io.github.cdimascio.dotenv.Dotenv;
  * @author santiaguf
  */
 public class Gatos {
-	
     Dotenv dotenv = Dotenv.load();
-    
+
     String id;
     String url;
     String apikey = dotenv.get("API_KEY");
@@ -51,7 +50,4 @@ public class Gatos {
     public void setImage(String image) {
         this.image = image;
     }
-    
-    
-    
 }
