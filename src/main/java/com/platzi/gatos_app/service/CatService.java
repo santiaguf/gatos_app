@@ -25,7 +25,7 @@ import javax.swing.JOptionPane;
  * @author santiaguf
  */
 public class CatService {
-    
+
     public static void verGatos() throws IOException{
         //1. vamos a traer los datos de la API
         OkHttpClient client = new OkHttpClient();
@@ -33,41 +33,41 @@ public class CatService {
         Request request = new Request.Builder().url("https://api.thecatapi.com/v1/images/search").get().build();
 
         Response response = client.newCall(request).execute();
-        
+
         String elJson = response.body().string();
-        
+
         //cortar los corchetes
         elJson = elJson.substring(1, elJson.length());
         elJson = elJson.substring(0, elJson.length()-1);
-              
+
         //crear u objeto de la clase Gson
         Gson gson = new Gson();
         Cats gatos = gson.fromJson(elJson, Cats.class);
-        
+
         //redimensionar en caso de necesitar
         Image image = null;
         try{
             URL url = new URL(gatos.getUrl());
             image = ImageIO.read(url);
-            
+
             ImageIcon fondoGato = new ImageIcon(image);
-            
+
             if(fondoGato.getIconWidth() > 800){
                 //redimensionamos
                 Image fondo = fondoGato.getImage();
                 Image modificada = fondo.getScaledInstance(800, 600, java.awt.Image.SCALE_SMOOTH);
                 fondoGato = new ImageIcon(modificada);
             }
-            
+
             String menu = "Opciones: \n"
                     + " 1. ver otra imagen \n"
                     + " 2. Favorito \n"
                     + " 3. Volver \n";
-            
+
             String[] botones = { "ver otra imagen", "favorito", "volver" };
             String id_gato = gatos.getId();
             String opcion = (String) JOptionPane.showInputDialog(null,menu,id_gato, JOptionPane.INFORMATION_MESSAGE, fondoGato, botones,botones[0]);
-            
+
             int seleccion = -1;
             //validamos que opcion selecciona el usuario
             for(int i=0;i<botones.length;i++){
@@ -75,7 +75,7 @@ public class CatService {
                     seleccion = i;
                 }
             }
-            
+
             switch (seleccion){
                 case 0:
                     verGatos();
@@ -86,69 +86,64 @@ public class CatService {
                 default:
                     break;
             }
-            
-        }catch(IOException e){
-               System.out.println(e);
-        }
-        
 
+        }catch(IOException e){
+            System.out.println(e);
+        }
     }
-    
+
     public static void favoritoGato(Cats gato) {
         try{
             OkHttpClient client = new OkHttpClient();
             MediaType mediaType = MediaType.parse("application/json");
             RequestBody body = RequestBody.create(mediaType, "{\n\t\"image_id\":\""+gato.getId()+"\"\n}");
             Request request = new Request.Builder()
-              .url("https://api.thecatapi.com/v1/favourites")
-              .post(body)
-              .addHeader("Content-Type", "application/json")
-              .addHeader("x-api-key", gato.getApikey())
-              .build();
+            .url("https://api.thecatapi.com/v1/favourites")
+            .post(body)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("x-api-key", gato.getApikey())
+            .build();
             Response response = client.newCall(request).execute();
-            
+
             if(!response.isSuccessful()) {
-            	response.body().close();
-            }            
+                response.body().close();
+            }
         }catch(IOException e){
             System.out.println(e);
         }
-  
+
     }
 
     public static void verFavorito(String apikey) throws IOException{
-    
+
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-          .url("https://api.thecatapi.com/v1/favourites")
-          .get()
-          .addHeader("Content-Type", "application/json")
-          .addHeader("x-api-key", apikey)
-          .build();
+        .url("https://api.thecatapi.com/v1/favourites")
+        .get()
+        .addHeader("Content-Type", "application/json")
+        .addHeader("x-api-key", apikey)
+        .build();
 
         Response response = client.newCall(request).execute();
-        
+
         // guardamos el string con la respuesta
         String elJson = response.body().string();
-        
+
         if(!response.isSuccessful()) {
-        	response.body().close();
+            response.body().close();
         }
-        
         //creamos el objeto gson
         Gson gson = new Gson();
-        
+
         FavoriteCats[] gatosArray = gson.fromJson(elJson,FavoriteCats[].class);
-        
         if(gatosArray.length > 0){
             int min = 1;
             int max  = gatosArray.length;
             int aleatorio = (int) (Math.random() * ((max-min)+1)) + min;
             int indice = aleatorio-1;
-            
             FavoriteCats gatofav = gatosArray[indice];
-            
+
                 //redimensionar en caso de necesitar
                 Image image = null;
                 try{
@@ -193,11 +188,9 @@ public class CatService {
                     }
 
                 }catch(IOException e){
-                       System.out.println(e);
+                    System.out.println(e);
                 }
-            
         }
-        
     }
 
     public static void borrarFavorito(FavoriteCats gatofav){
@@ -205,20 +198,18 @@ public class CatService {
             OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
-              .url("https://api.thecatapi.com/v1/favourites/"+gatofav.getId()+"")
-              .delete(null)
-              .addHeader("Content-Type", "application/json")
-              .addHeader("x-api-key", gatofav.getApikey())
-              .build();
+            .url("https://api.thecatapi.com/v1/favourites/"+gatofav.getId()+"")
+            .delete(null)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("x-api-key", gatofav.getApikey())
+            .build();
 
             Response response = client.newCall(request).execute();
-            
             if(!response.isSuccessful()) {
-            	response.body().close();
+                response.body().close();
             }
         }catch(IOException e){
             System.out.println(e);
         }
-        
     }
 }
