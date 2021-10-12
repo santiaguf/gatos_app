@@ -6,8 +6,8 @@
 package com.platzi.gatos_app.service;
 
 import com.google.gson.Gson;
-import com.platzi.gatos_app.model.Gatos;
-import com.platzi.gatos_app.model.GatosFav;
+import com.platzi.gatos_app.model.Cats;
+import com.platzi.gatos_app.model.FavoriteCats;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
  *
  * @author santiaguf
  */
-public class GatosService {
+public class CatService {
     
     public static void verGatos() throws IOException{
         //1. vamos a traer los datos de la API
@@ -42,7 +42,7 @@ public class GatosService {
               
         //crear u objeto de la clase Gson
         Gson gson = new Gson();
-        Gatos gatos = gson.fromJson(elJson, Gatos.class);
+        Cats gatos = gson.fromJson(elJson, Cats.class);
         
         //redimensionar en caso de necesitar
         Image image = null;
@@ -94,7 +94,7 @@ public class GatosService {
 
     }
     
-    public static void favoritoGato(Gatos gato) {
+    public static void favoritoGato(Cats gato) {
         try{
             OkHttpClient client = new OkHttpClient();
             MediaType mediaType = MediaType.parse("application/json");
@@ -139,7 +139,7 @@ public class GatosService {
         //creamos el objeto gson
         Gson gson = new Gson();
         
-        GatosFav[] gatosArray = gson.fromJson(elJson,GatosFav[].class);
+        FavoriteCats[] gatosArray = gson.fromJson(elJson,FavoriteCats[].class);
         
         if(gatosArray.length > 0){
             int min = 1;
@@ -147,7 +147,7 @@ public class GatosService {
             int aleatorio = (int) (Math.random() * ((max-min)+1)) + min;
             int indice = aleatorio-1;
             
-            GatosFav gatofav = gatosArray[indice];
+            FavoriteCats gatofav = gatosArray[indice];
             
                 //redimensionar en caso de necesitar
                 Image image = null;
@@ -200,7 +200,7 @@ public class GatosService {
         
     }
 
-    public static void borrarFavorito(GatosFav gatofav){
+    public static void borrarFavorito(FavoriteCats gatofav){
         try{
             OkHttpClient client = new OkHttpClient();
 

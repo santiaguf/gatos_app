@@ -11,13 +11,13 @@ import io.github.cdimascio.dotenv.Dotenv;
  *
  * @author santiaguf
  */
-public class GatosFav {
-	Dotenv dotenv = Dotenv.load();
+public class Cats {
+    Dotenv dotenv = Dotenv.load();
 
     String id;
-    String image_id;
-    String apikey= dotenv.get("API_KEY");
-    public Imagex image;
+    String url;
+    String apikey = dotenv.get("API_KEY");
+    String image;
 
     public String getId() {
         return id;
@@ -27,12 +27,12 @@ public class GatosFav {
         this.id = id;
     }
 
-    public String getImage_id() {
-        return image_id;
+    public String getUrl() {
+        return url;
     }
 
-    public void setImage_id(String image_id) {
-        this.image_id = image_id;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getApikey() {
@@ -43,11 +43,11 @@ public class GatosFav {
         this.apikey = apikey;
     }
 
-    public Imagex getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Imagex image) {
+    public void setImage(String image) {
         this.image = image;
     }
 }

@@ -9,7 +9,7 @@ package com.platzi.gatos_app.model;
  *
  * @author santiaguf
  */
-public class Imagex {
+public class ImageX {
     String id;
     String url;
 

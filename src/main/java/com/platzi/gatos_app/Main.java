@@ -8,8 +8,8 @@ package com.platzi.gatos_app;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 
-import com.platzi.gatos_app.model.Gatos;
-import com.platzi.gatos_app.service.GatosService;
+import com.platzi.gatos_app.model.Cats;
+import com.platzi.gatos_app.service.CatService;
 
 /**
  *
@@ -36,11 +36,11 @@ public class Main {
 
             switch(opcion_menu){
                 case 0:
-                    GatosService.verGatos();
+                    CatService.verGatos();
                     break;
                 case 1:
-                    Gatos gato = new Gatos();
-                    GatosService.verFavorito(gato.getApikey());
+                    Cats gato = new Cats();
+                    CatService.verFavorito(gato.getApikey());
                 default:
                     break;
             }
