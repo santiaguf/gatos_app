@@ -22,12 +22,8 @@ public class Main {
         String[] botones = {" 1. ver gatos", "2. ver favoritos", "3. salir"};
 
         do{
+            String opcion = (String) JOptionPane.showInputDialog(null, "Gatitos java", "Menu principal", JOptionPane.INFORMATION_MESSAGE, null, botones,botones[0]);
 
-            //menu principal
-            String opcion = (String) JOptionPane.showInputDialog(null, "Gatitos java", "Menu principal", JOptionPane.INFORMATION_MESSAGE,
-                    null, botones,botones[0]);
-
-            //validamos que opcion selecciona el usuario
             for(int i=0;i<botones.length;i++){
                 if(opcion.equals(botones[i])){
                     opcion_menu = i;

@@ -15,7 +15,7 @@ public class FavoriteCats {
 	Dotenv dotenv = Dotenv.load();
 
     String id;
-    String image_id;
+    String imageId;
     String apikey= dotenv.get("API_KEY");
     public ImageX image;
 
@@ -27,12 +27,12 @@ public class FavoriteCats {
         this.id = id;
     }
 
-    public String getImage_id() {
-        return image_id;
+    public String getImageId() {
+        return imageId;
     }
 
-    public void setImage_id(String image_id) {
-        this.image_id = image_id;
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 
     public String getApikey() {
