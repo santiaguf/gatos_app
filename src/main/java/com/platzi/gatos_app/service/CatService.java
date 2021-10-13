@@ -7,7 +7,7 @@ package com.platzi.gatos_app.service;
 
 import com.google.gson.Gson;
 import com.platzi.gatos_app.model.Cats;
-import com.platzi.gatos_app.model.FavoriteCats;
+import com.platzi.gatos_app.model.FavoriteCat;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -38,70 +38,16 @@ public class CatService {
                     + " 2. Favorito \n"
                     + " 3. Volver \n";
 
-    public static void verGatos() throws IOException{
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(SEARCH_ENDPOINT).get().build();
-        Response response = client.newCall(request).execute();
-        String elJson = response.body().string();
-
-        elJson = elJson.substring(1, elJson.length());
-        elJson = elJson.substring(0, elJson.length()-1);
-
-        Gson gson = new Gson();
-        Cats gatos = gson.fromJson(elJson, Cats.class);
-
-        Image image = null;
-        try{
-            URL url = new URL(gatos.getUrl());
-            image = ImageIO.read(url);
-
-            ImageIcon fondoGato = new ImageIcon(image);
-
-            if(fondoGato.getIconWidth() > 800){
-
-                Image fondo = fondoGato.getImage();
-                Image modificada = fondo.getScaledInstance(800, 600, java.awt.Image.SCALE_SMOOTH);
-                fondoGato = new ImageIcon(modificada);
-            }
-
-            String[] botones = { "ver otra imagen", "favorito", "volver" };
-            String id_gato = gatos.getId();
-            String opcion = (String) JOptionPane.showInputDialog(null, randomCatsMenu, id_gato, JOptionPane.INFORMATION_MESSAGE, fondoGato, botones,botones[0]);
-
-            int seleccion = -1;
-
-            for(int i=0;i<botones.length;i++){
-                if(opcion.equals(botones[i])){
-                    seleccion = i;
-                }
-            }
-
-            switch (seleccion){
-                case 0:
-                    verGatos();
-                    break;
-                case 1:
-                    favoritoGato(gatos);
-                    break;
-                default:
-                    break;
-            }
-
-        }catch(IOException e){
-            System.out.println(e);
-        }
-    }
-
-    public static void favoritoGato(Cats gato) {
+    public static void markCatAsFavorite(Cats cat) {
         try{
             OkHttpClient client = new OkHttpClient();
             MediaType mediaType = MediaType.parse("application/json");
-            RequestBody body = RequestBody.create(mediaType, "{\n\t\"image_id\":\""+gato.getId()+"\"\n}");
+            RequestBody body = RequestBody.create(mediaType, "{\n\t\"image_id\":\""+cat.getId()+"\"\n}");
             Request request = new Request.Builder()
             .url(FAVORITE_ENDPOINT)
             .post(body)
             .addHeader("Content-Type", "application/json")
-            .addHeader("x-api-key", gato.getApikey())
+            .addHeader("x-api-key", cat.getApikey())
             .build();
             Response response = client.newCall(request).execute();
 
@@ -114,7 +60,83 @@ public class CatService {
 
     }
 
-    public static void verFavorito(String apikey) throws IOException{
+    public static void deleteFavorite(FavoriteCat favoriteCat){
+        try{
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+            .url(FAVORITE_ENDPOINT+favoriteCat.getId()+"")
+            .delete(null)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("x-api-key", favoriteCat.getApikey())
+            .build();
+
+            Response response = client.newCall(request).execute();
+            if(!response.isSuccessful()) {
+                response.body().close();
+            }
+        }catch(IOException e){
+            System.out.println(e);
+        }
+    }
+
+    public static void seeRandomCats() throws IOException{
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(SEARCH_ENDPOINT).get().build();
+        Response response = client.newCall(request).execute();
+        String jsonData = response.body().string();
+
+        jsonData = jsonData.substring(1, jsonData.length());
+        jsonData = jsonData.substring(0, jsonData.length()-1);
+
+        Gson gson = new Gson();
+        Cats cat = gson.fromJson(jsonData, Cats.class);
+
+        Image image = null;
+        try{
+            URL url = new URL(cat.getUrl());
+            image = ImageIO.read(url);
+
+            ImageIcon catImageIcon = new ImageIcon(image);
+
+            if(catImageIcon.getIconWidth() > 800){
+
+                Image background = catImageIcon.getImage();
+                Image modified = background.getScaledInstance(800, 600, java.awt.Image.SCALE_SMOOTH);
+                catImageIcon = new ImageIcon(modified);
+            }
+
+            String[] buttoms = { "ver otra imagen", "favorito", "volver" };
+            String catId = cat.getId();
+            String option = (String) JOptionPane.showInputDialog(null, randomCatsMenu, catId, JOptionPane.INFORMATION_MESSAGE, catImageIcon, buttoms,buttoms[0]);
+
+            int selection = -1;
+
+            for(int i=0;i<buttoms.length;i++){
+                if(option.equals(buttoms[i])){
+                    selection = i;
+                }
+            }
+
+            switch (selection){
+                case 0:
+                    seeRandomCats();
+                    break;
+                case 1:
+                    markCatAsFavorite(cat);
+                    break;
+                default:
+                    break;
+            }
+
+        }catch(IOException e){
+            System.out.println(e);
+        }
+    }
+
+
+
+    public static void seeFavoriteCats(String apikey) throws IOException{
 
         OkHttpClient client = new OkHttpClient();
 
@@ -127,7 +149,7 @@ public class CatService {
 
         Response response = client.newCall(request).execute();
 
-        String elJson = response.body().string();
+        String jsonData = response.body().string();
 
         if(!response.isSuccessful()) {
             response.body().close();
@@ -135,47 +157,47 @@ public class CatService {
 
         Gson gson = new Gson();
 
-        FavoriteCats[] gatosArray = gson.fromJson(elJson,FavoriteCats[].class);
-        if(gatosArray.length > 0){
+        FavoriteCat[] catsArray = gson.fromJson(jsonData,FavoriteCat[].class);
+        if(catsArray.length > 0){
             int min = 1;
-            int max  = gatosArray.length;
+            int max  = catsArray.length;
             int aleatorio = (int) (Math.random() * ((max-min)+1)) + min;
             int indice = aleatorio-1;
-            FavoriteCats gatofav = gatosArray[indice];
+            FavoriteCat favoriteCat = catsArray[indice];
 
 
                 Image image = null;
                 try{
-                    URL url = new URL(gatofav.image.getUrl());
+                    URL url = new URL(favoriteCat.image.getUrl());
                     image = ImageIO.read(url);
 
-                    ImageIcon fondoGato = new ImageIcon(image);
+                    ImageIcon catImageIcon = new ImageIcon(image);
 
-                    if(fondoGato.getIconWidth() > 800){
+                    if(catImageIcon.getIconWidth() > 800){
 
-                        Image fondo = fondoGato.getImage();
-                        Image modificada = fondo.getScaledInstance(800, 600, java.awt.Image.SCALE_SMOOTH);
-                        fondoGato = new ImageIcon(modificada);
+                        Image background = catImageIcon.getImage();
+                        Image modified = background.getScaledInstance(800, 600, java.awt.Image.SCALE_SMOOTH);
+                        catImageIcon = new ImageIcon(modified);
                     }
 
-                    String[] botones = { "ver otra imagen", "eliminar favorito", "volver" };
-                    String id_gato = gatofav.getId();
-                    String opcion = (String) JOptionPane.showInputDialog(null, FavoriteMenu, id_gato, JOptionPane.INFORMATION_MESSAGE, fondoGato, botones,botones[0]);
+                    String[] buttoms = { "ver otra imagen", "eliminar favorito", "volver" };
+                    String catId = favoriteCat.getId();
+                    String option = (String) JOptionPane.showInputDialog(null, FavoriteMenu, catId, JOptionPane.INFORMATION_MESSAGE, catImageIcon, buttoms,buttoms[0]);
 
-                    int seleccion = -1;
+                    int selection = -1;
 
-                    for(int i=0;i<botones.length;i++){
-                        if(opcion.equals(botones[i])){
-                            seleccion = i;
+                    for(int i=0;i<buttoms.length;i++){
+                        if(option.equals(buttoms[i])){
+                            selection = i;
                         }
                     }
 
-                    switch (seleccion){
+                    switch (selection){
                         case 0:
-                            verFavorito(apikey);
+                            seeFavoriteCats(apikey);
                             break;
                         case 1:
-                            borrarFavorito(gatofav);
+                            deleteFavorite(favoriteCat);
                             break;
                         default:
                             break;
@@ -187,23 +209,5 @@ public class CatService {
         }
     }
 
-    public static void borrarFavorito(FavoriteCats gatofav){
-        try{
-            OkHttpClient client = new OkHttpClient();
 
-            Request request = new Request.Builder()
-            .url(FAVORITE_ENDPOINT+gatofav.getId()+"")
-            .delete(null)
-            .addHeader("Content-Type", "application/json")
-            .addHeader("x-api-key", gatofav.getApikey())
-            .build();
-
-            Response response = client.newCall(request).execute();
-            if(!response.isSuccessful()) {
-                response.body().close();
-            }
-        }catch(IOException e){
-            System.out.println(e);
-        }
-    }
 }

@@ -18,28 +18,28 @@ import com.platzi.gatos_app.service.CatService;
 public class Main {
 
     public static void main(String[] args) throws IOException{
-        int opcion_menu = -1;
-        String[] botones = {" 1. ver gatos", "2. ver favoritos", "3. salir"};
+        int menuOption = -1;
+        String[] buttoms = {" 1. ver gatos", "2. ver favoritos", "3. salir"};
 
         do{
-            String opcion = (String) JOptionPane.showInputDialog(null, "Gatitos java", "Menu principal", JOptionPane.INFORMATION_MESSAGE, null, botones,botones[0]);
+            String option = (String) JOptionPane.showInputDialog(null, "Gatitos java", "Menu principal", JOptionPane.INFORMATION_MESSAGE, null, buttoms,buttoms[0]);
 
-            for(int i=0;i<botones.length;i++){
-                if(opcion.equals(botones[i])){
-                    opcion_menu = i;
+            for(int i=0;i<buttoms.length;i++){
+                if(option.equals(buttoms[i])){
+                    menuOption = i;
                 }
             }
 
-            switch(opcion_menu){
+            switch(menuOption){
                 case 0:
-                    CatService.verGatos();
+                    CatService.seeRandomCats();
                     break;
                 case 1:
-                    Cats gato = new Cats();
-                    CatService.verFavorito(gato.getApikey());
+                    Cats cat = new Cats();
+                    CatService.seeFavoriteCats(cat.getApikey());
                 default:
                     break;
             }
-        }while(opcion_menu != 2);
+        }while(menuOption != 2);
     }
 }

@@ -11,7 +11,7 @@ import io.github.cdimascio.dotenv.Dotenv;
  *
  * @author santiaguf
  */
-public class FavoriteCats {
+public class FavoriteCat {
 	Dotenv dotenv = Dotenv.load();
 
     String id;
